@@ -35,6 +35,37 @@ search.addEventListener("click", () => {
       switch (json.weather[0].main) {
         case "Clear":
           image.src = "images/clear.png";
+          break;
+
+        case "Rain":
+          image.src = "images/rain.png";
+          break;
+
+        case "Snow":
+          image.src = "images/snow.png";
+          break;
+
+        case "Clouds":
+          image.src = "images/clouds.png";
+          break;
+
+        case "Haze":
+          image.src = "images/haze.png";
+          break;
+
+        default:
+          image.src = "";
       }
+
+      temperature.innerHTML = `${parseInt(json.main.temp)}<span>C</span>`;
+      description.innerHTML = `${json.weather[0].description}`;
+      humidity.innerHTML = `${json.main.humidity}%`;
+      wind.innerHTML = `${parseInt(json.wind.speed)}Km/h`;
+
+      weatherBox.style.display = "";
+      weatherDetails.style.display = "";
+      weatherBox.classList.add("fadeIn");
+      weatherDetails.classList.add(`fadeIn`);
+      container.style.heigth = "590px";
     });
 });
