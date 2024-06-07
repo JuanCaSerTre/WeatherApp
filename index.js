@@ -1,71 +1,82 @@
-const { response, json } = require("express");
-
+// Select required DOM elements
 const container = document.querySelector(".container");
 const search = document.querySelector(".search-box button");
 const weatherBox = document.querySelector(".weather-box");
 const weatherDetails = document.querySelector(".weather-details");
 const error404 = document.querySelector(".not-found");
 
+// Add click event listener to the search button
 search.addEventListener("click", () => {
-  const APIkey = "cd49e45b2dfc08c230dd0f93487186b7";
-  const city = document.querySelector(".search-box input").ariaValueMax;
+  const APIKey = "cd49e45b2dfc08c230dd0f93487186b7";
+
+  // Fixed fetching the city value from the input field
+  const city = document.querySelector(".search-box input").value;
+
+  // Check if the city input is empty
   if (city === "") return;
 
+  // Fetch weather data from the API
   fetch(
     `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${APIKey}`
   )
     .then((response) => response.json())
     .then((json) => {
+      // Handle city not found error
       if (json.cod === "404") {
-        container.computedStyleMap.heigth = "400px";
-        weatherBox.computedStyleMap.display = "none";
-        weatherDetails.computedStyleMap.display = "none";
+        // Fixed typos in style property names
+        container.style.height = "400px";
+        weatherBox.style.display = "none";
+        weatherDetails.style.display = "none";
         error404.style.display = "block";
         error404.classList.add("fadeIn");
         return;
       }
+
+      // Hide error message and remove fadeIn class
       error404.style.display = "none";
       error404.classList.remove("fadeIn");
 
+      // Select weather display elements
       const image = document.querySelector(".weather-box img");
       const temperature = document.querySelector(".weather-box .temperature");
       const description = document.querySelector(".weather-box .description");
-      const humidity = document.querySelector(" .weather-box .humidity span");
-      const wind = document.querySelector(".weather-box .wind span");
+      const humidity = document.querySelector(
+        ".weather-details .humidity span"
+      );
+      const wind = document.querySelector(".weather-details .wind span");
+
+      // Update weather image based on the weather condition
       switch (json.weather[0].main) {
         case "Clear":
           image.src = "images/clear.png";
           break;
-
         case "Rain":
           image.src = "images/rain.png";
           break;
-
         case "Snow":
           image.src = "images/snow.png";
           break;
-
         case "Clouds":
-          image.src = "images/clouds.png";
+          image.src = "images/cloud.png";
           break;
-
         case "Haze":
-          image.src = "images/haze.png";
+          image.src = "images/mist.png";
           break;
-
         default:
           image.src = "";
       }
 
-      temperature.innerHTML = `${parseInt(json.main.temp)}<span>C</span>`;
+      // Update weather details
+      temperature.innerHTML = `${parseInt(json.main.temp)}<span>°C</span>`;
       description.innerHTML = `${json.weather[0].description}`;
       humidity.innerHTML = `${json.main.humidity}%`;
-      wind.innerHTML = `${parseInt(json.wind.speed)}Km/h`;
+      wind.innerHTML = `${parseInt(json.wind.speed)} Km/h`;
 
+      // Show weather information and apply animations
       weatherBox.style.display = "";
       weatherDetails.style.display = "";
       weatherBox.classList.add("fadeIn");
-      weatherDetails.classList.add(`fadeIn`);
-      container.style.heigth = "590px";
+      weatherDetails.classList.add("fadeIn");
+      container.style.height = "590px"; // Fixed typo in height
     });
 });
